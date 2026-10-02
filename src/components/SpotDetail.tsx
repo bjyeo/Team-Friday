@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import type { ReportableCrowd } from '../types'
 import type { SpotVM } from '../lib/viewModel'
 import { ReportSheet } from './ReportSheet'
+import { WatchButton } from './WatchButton'
 
 interface Props {
   spot: SpotVM
@@ -86,6 +87,9 @@ export function SpotDetail({ spot: s, showBack, onBack, onReport, onChoose }: Pr
           {s.name}
         </h1>
         <div style={{ fontSize: 14, color: 'var(--color-neutral-700)' }}>{s.address}</div>
+        <div style={{ marginTop: 'var(--space-2)' }}>
+          <WatchButton spotId={s.id} />
+        </div>
       </div>
 
       <div className="stat-split">

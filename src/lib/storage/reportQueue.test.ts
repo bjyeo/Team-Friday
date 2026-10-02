@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import type { PendingReport, Report, Session } from '../../types'
+import { EMPTY_NOTIFICATION_STATE, type NotificationState } from '../notifications/types'
 import { StorageError, type StorageAdapter } from './adapter'
 import { MAX_ATTEMPTS, ReportQueue } from './reportQueue'
 
@@ -36,6 +37,10 @@ class FlakyAdapter implements StorageAdapter {
   async savePending(p: PendingReport[]) {
     this.pending = p
   }
+  async loadNotifications(): Promise<NotificationState> {
+    return EMPTY_NOTIFICATION_STATE
+  }
+  async saveNotifications() {}
 }
 
 describe('ReportQueue', () => {

@@ -1,10 +1,12 @@
 import type { PendingReport, Report, Session } from '../../types'
+import { EMPTY_NOTIFICATION_STATE, type NotificationState } from '../notifications/types'
 import { StorageError, type StorageAdapter } from './adapter'
 
 const KEYS = {
   reports: 'spotr.reports.v1',
   session: 'spotr.session.v1',
   pending: 'spotr.pending.v1',
+  notifications: 'spotr.notifications.v1',
 } as const
 
 /**
@@ -69,6 +71,28 @@ export class LocalStorageAdapter implements StorageAdapter {
 
   async savePending(pending: PendingReport[]): Promise<void> {
     this.write(KEYS.pending, pending)
+  }
+
+  async loadNotifications(): Promise<NotificationState> {
+    const stored = this.read<Partial<NotificationState>>(KEYS.notifications, {})
+    // Merged over the defaults so a state written by an older version — one
+    // without a preference this version reads — still loads.
+    return {
+      ...EMPTY_NOTIFICATION_STATE,
+      ...stored,
+      prefs: {
+        ...EMPTY_NOTIFICATION_STATE.prefs,
+        ...(stored.prefs ?? {}),
+        channels: {
+          ...EMPTY_NOTIFICATION_STATE.prefs.channels,
+          ...(stored.prefs?.channels ?? {}),
+        },
+      },
+    }
+  }
+
+  async saveNotifications(state: NotificationState): Promise<void> {
+    this.write(KEYS.notifications, state)
   }
 }
 

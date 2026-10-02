@@ -1,4 +1,5 @@
 import type { PendingReport, Report, Session } from '../../types'
+import type { NotificationState } from '../notifications/types'
 
 /**
  * Everything the app needs from a backend. The local implementation keeps all
@@ -20,6 +21,14 @@ export interface StorageAdapter {
   /** Reports that failed to send and are waiting for another try. */
   loadPending(): Promise<PendingReport[]>
   savePending(pending: PendingReport[]): Promise<void>
+
+  /**
+   * The notification connector's whole state — connected address, preferences,
+   * watchlist, outbox, alert history. Kept as one blob so this interface does
+   * not grow a pair of methods every time the connector learns a new trick.
+   */
+  loadNotifications(): Promise<NotificationState>
+  saveNotifications(state: NotificationState): Promise<void>
 }
 
 export class StorageError extends Error {

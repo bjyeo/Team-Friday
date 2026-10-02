@@ -13,7 +13,7 @@ find every seat taken. Spotr answers "is there a seat, right now" before the tri
 ```bash
 npm install
 npm run dev        # http://localhost:5173/Team-Friday/
-npm test           # 71 tests over the core logic
+npm test           # 99 tests over the core logic
 npm run build      # typecheck + production bundle
 ```
 
@@ -30,6 +30,7 @@ the browser.
 | Filter by air-con, power, noise and 24/7 | `lib/filters.ts` |
 | Tap one button on arrival to report how full it is | `components/ReportSheet.tsx` |
 | Open the spot in my maps app | `components/SpotDetail.tsx` |
+| Watch a spot and be told when it has seats | `lib/notifications/`, `pages/AlertsPage.tsx` |
 
 Twelve spots are seeded by hand around Kent Ridge, Clementi and the city, with real
 coordinates so distance and radius-widening behave the way they will against any later
@@ -87,6 +88,54 @@ export function createStorage(): StorageAdapter {
 The retry queue, the optimistic update and the "not saved" banner are all in place for the
 day that write goes over a network.
 
+## Notifications
+
+Star a spot with **Watch**; when a report lands saying it has seats, Spotr tells you. Settings
+live at `#/alerts`.
+
+Three rules stop it being spam, all in `lib/notifications/detect.ts` and all tested:
+
+1. Only reports that arrive **after** you start watching — watching a spot that already has
+   seats must not ping you about the card you are looking at.
+2. Only reports newer than the last alert for that spot.
+3. At most one alert per spot per 30 minutes.
+
+Stale information never alerts, for the same reason it is labelled everywhere else.
+
+### Why email doesn't actually send
+
+**Browser notifications work.** They need no server, no account and no key, and they fire on
+desktop and Android while the tab is open.
+
+**Email does not.** Sending mail needs a provider account and a secret key, and a static site
+has nowhere to keep one — shipping a key in the bundle publishes it. So `EmailChannel`
+composes the message and queues it, and the Alerts page shows you the exact text that would
+have gone out, labelled `queued`, with the reason. Nothing claims to have been delivered when
+it wasn't.
+
+The address is **not verified** either, and the UI says so: verifying means mailing a code,
+which is the same missing capability.
+
+To make it real, implement `MailSender` and pass it to `EmailChannel` — nothing else changes:
+
+```ts
+class RelaySender implements MailSender {
+  name = 'Relay'
+  async send(to: string, subject: string, body: string) {
+    const res = await fetch('https://your-worker.example/send', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ to, subject, body }),
+    })
+    if (!res.ok) throw new Error(`Mail relay returned ${res.status}`)
+  }
+}
+```
+
+Point it at a tiny Cloudflare Worker or Vercel function holding the provider key, so the key
+never reaches the browser. Adding a channel (push, Telegram, SMS) means one more class
+implementing `NotificationChannel`; detection, preferences and the UI are untouched.
+
 ## Sign-in
 
 Out of scope in the canvas, requested afterwards. It is a **client-side gate, not
@@ -108,10 +157,11 @@ src/
 │   ├── filters.ts          filters, sorts, radius widening
 │   ├── viewModel.ts        display strings and status colours
 │   ├── metrics.ts          time-to-choose measurement
+│   ├── notifications/      detection, channels, composition, dispatch
 │   └── storage/            adapter, localStorage impl, retry queue, seed
-├── context/                auth, reports, chosen place
-├── components/             header, list (3 layouts), detail, report sheet
-├── pages/                  login, location, browse
+├── context/                auth, reports, chosen place, notifications
+├── components/             header, list (3 layouts), detail, report sheet, watch
+├── pages/                  login, location, browse, alerts
 └── styles/tokens.css       the Modernist design tokens
 ```
 

@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { Header } from '../components/Header'
 import { SpotDetail } from '../components/SpotDetail'
 import { SpotList } from '../components/SpotList'
 import { useAuth } from '../context/AuthContext'
+import { useNotifications } from '../context/NotificationsContext'
 import { usePlace } from '../context/PlaceContext'
 import { useReports } from '../context/ReportsContext'
 import { SPOTS } from '../data/spots'
@@ -28,6 +29,7 @@ export function BrowsePage() {
   const { place, clearPlace } = usePlace()
   const { session } = useAuth()
   const { reports, pendingCount, submit, retryPending } = useReports()
+  const { evaluate } = useNotifications()
   const wide = useIsWide()
 
   const [filters, setFilters] = useState<Filters>({})
@@ -40,6 +42,13 @@ export function BrowsePage() {
     () => buildAllSpotStates(SPOTS, reports, place?.coords ?? null, Date.now()),
     [reports, place],
   )
+
+  // Alerts are judged against every spot, not just the ones in range or passing
+  // the current filters — a student watching a spot wants to hear about it even
+  // while they are looking at somewhere else.
+  useEffect(() => {
+    void evaluate(states)
+  }, [states, evaluate])
 
   const inRange = useMemo(() => withinRadius(states), [states])
   const visible = useMemo(

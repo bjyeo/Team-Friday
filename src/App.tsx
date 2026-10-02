@@ -1,8 +1,10 @@
 import { useMemo, type ReactNode } from 'react'
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { NotificationsProvider } from './context/NotificationsContext'
 import { PlaceProvider } from './context/PlaceContext'
 import { ReportsProvider } from './context/ReportsContext'
+import { AlertsPage } from './pages/AlertsPage'
 import { BrowsePage } from './pages/BrowsePage'
 import { LocationPage } from './pages/LocationPage'
 import { LoginPage } from './pages/LoginPage'
@@ -44,28 +46,38 @@ export default function App() {
     <HashRouter>
       <AuthProvider storage={storage}>
         <ReportsProvider storage={storage}>
-          <PlaceProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route
-                path="/"
-                element={
-                  <RequireAuth>
-                    <LocationPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/browse"
-                element={
-                  <RequireAuth>
-                    <BrowsePage />
-                  </RequireAuth>
-                }
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </PlaceProvider>
+          <NotificationsProvider storage={storage}>
+            <PlaceProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route
+                  path="/"
+                  element={
+                    <RequireAuth>
+                      <LocationPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/browse"
+                  element={
+                    <RequireAuth>
+                      <BrowsePage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/alerts"
+                  element={
+                    <RequireAuth>
+                      <AlertsPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </PlaceProvider>
+          </NotificationsProvider>
         </ReportsProvider>
       </AuthProvider>
     </HashRouter>
