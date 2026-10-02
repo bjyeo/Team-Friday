@@ -125,6 +125,27 @@ a:hover {
   border: 0;
 }
 
+/* The seats/crowd pair on the detail pane. Side by side with a rule between
+   them when there is room, stacked with a rule above when there is not — an
+   inline border-right would hang off the edge of the single-column layout. */
+.stat-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-bottom: 2px solid var(--color-divider);
+}
+.stat-split > * + * {
+  border-top: 2px solid var(--color-divider);
+}
+@media (min-width: 560px) {
+  .stat-split {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stat-split > * + * {
+    border-top: 0;
+    border-left: 2px solid var(--color-divider);
+  }
+}
+
 /* Hover/active states the mockup expressed with style-hover attributes. */
 .hoverable:hover {
   background: color-mix(in srgb, var(--color-text) 5%, transparent);

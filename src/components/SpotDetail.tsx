@@ -88,20 +88,13 @@ export function SpotDetail({ spot: s, showBack, onBack, onReport, onChoose }: Pr
         <div style={{ fontSize: 14, color: 'var(--color-neutral-700)' }}>{s.address}</div>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
-          borderBottom: '2px solid var(--color-divider)',
-        }}
-      >
+      <div className="stat-split">
         <div
           style={{
             padding: 'var(--space-4)',
             display: 'flex',
             flexDirection: 'column',
             gap: 4,
-            borderRight: '2px solid var(--color-divider)',
           }}
         >
           <Kicker>Seats free</Kicker>
