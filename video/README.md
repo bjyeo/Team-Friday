@@ -1,13 +1,15 @@
 # Spotr demo video
 
 The 45-second demo linked from the main README, built with [Remotion](https://www.remotion.dev).
-The rendered file is committed at [`../docs/spotr-demo.mp4`](../docs/spotr-demo.mp4).
+The rendered file is committed at [`../public/spotr-demo.mp4`](../public/spotr-demo.mp4), so the
+Pages deploy serves it at https://bjyeo.github.io/Team-Friday/spotr-demo.mp4. GitHub's file
+view will not play a video this size, so the README links to the Pages URL instead.
 
 ```bash
 npm i
 npm run dev                                         # Studio preview at http://localhost:3000
 npx remotion render SpotrDemo out/spotr-demo.mp4    # render (out/ is gitignored)
-cp out/spotr-demo.mp4 ../docs/spotr-demo.mp4        # then commit the new render
+cp out/spotr-demo.mp4 ../public/spotr-demo.mp4      # then commit the new render
 ```
 
 ## How it is put together

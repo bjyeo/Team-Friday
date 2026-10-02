@@ -10,9 +10,9 @@ find every seat taken. Spotr answers "is there a seat, right now" before the tri
 
 ## Demo
 
-[![Spotr demo video: sign in, find spots nearby, filter, check a spot and report in one tap](docs/spotr-demo-poster.jpg)](docs/spotr-demo.mp4)
+[![Spotr demo video: sign in, find spots nearby, filter, check a spot and report in one tap](docs/spotr-demo-poster.jpg)](https://bjyeo.github.io/Team-Friday/spotr-demo.mp4)
 
-**[▶ Watch the 45-second demo](docs/spotr-demo.mp4)**: sign in, find spots near you, filter,
+**[▶ Watch the 45-second demo](https://bjyeo.github.io/Team-Friday/spotr-demo.mp4)**: sign in, find spots near you, filter,
 check a spot, and report how full it is with one tap. The app screens are real captures of
 the live site. The video is built with [Remotion](https://www.remotion.dev) in [`video/`](video/).
 
