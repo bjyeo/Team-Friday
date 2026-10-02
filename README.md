@@ -8,6 +8,14 @@ students already sitting in them.
 Students who study outside home search Google Maps, travel twenty minutes, and arrive to
 find every seat taken. Spotr answers "is there a seat, right now" before the trip.
 
+## Demo
+
+[![Spotr demo video: sign in, find spots nearby, filter, check a spot and report in one tap](docs/spotr-demo-poster.jpg)](https://bjyeo.github.io/Team-Friday/spotr-demo.mp4)
+
+**[▶ Watch the 45-second demo](https://bjyeo.github.io/Team-Friday/spotr-demo.mp4)**: sign in, find spots near you, filter,
+check a spot, and report how full it is with one tap. The app screens are real captures of
+the live site. The video is built with [Remotion](https://www.remotion.dev) in [`video/`](video/).
+
 ## Running it
 
 ```bash
