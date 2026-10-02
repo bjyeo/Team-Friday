@@ -118,6 +118,10 @@ src/
 Design tokens and all three card layouts (Ledger, Tiles, Gauge) come from the UI mockup;
 the layout switcher in the list header lets you see each one.
 
+The logo is drawn as inline SVG in `components/Logo.tsx` rather than imported, so it stays
+sharp at any size and takes its four colours from the palette tokens. The source artwork is
+in `design/`.
+
 ## Deployment
 
 Pushing to `main` runs tests, builds, and publishes to GitHub Pages
